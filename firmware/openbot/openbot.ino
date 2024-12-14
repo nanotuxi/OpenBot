@@ -914,6 +914,7 @@ void setup() {
       ledcAttachPin(PIN_PWM_L, LHS_PWM_OUT);
       ledcAttachPin(PIN_PWM_R, RHS_PWM_OUT);
     #endif
+    //set pin mode
       pinMode(PIN_DIR_L, OUTPUT);
       pinMode(PIN_DIR_R, OUTPUT);
       pinMode(PIN_DIR_L, LOW);
