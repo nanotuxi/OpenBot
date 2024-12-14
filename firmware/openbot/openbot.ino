@@ -907,11 +907,6 @@ void setup() {
     #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
       ledcAttach(PIN_PWM_L, FREQ, RES);
       ledcAttach(PIN_PWM_R, FREQ, RES);
-
-      pinMode(PIN_DIR_L, OUTPUT);
-      pinMode(PIN_DIR_R, OUTPUT);
-      pinMode(PIN_DIR_L, LOW);
-      pinMode(PIN_DIR_R, LOW);
     #else
       ledcSetup(LHS_PWM_OUT, FREQ, RES);
       ledcSetup(RHS_PWM_OUT, FREQ, RES);
@@ -919,6 +914,10 @@ void setup() {
       ledcAttachPin(PIN_PWM_L, LHS_PWM_OUT);
       ledcAttachPin(PIN_PWM_R, RHS_PWM_OUT);
     #endif
+      pinMode(PIN_DIR_L, OUTPUT);
+      pinMode(PIN_DIR_R, OUTPUT);
+      pinMode(PIN_DIR_L, LOW);
+      pinMode(PIN_DIR_R, LOW);
   #endif
 
   #ifdef ESP_ARDUINO_VERSION_MAJOR
