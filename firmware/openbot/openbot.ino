@@ -49,7 +49,6 @@
 #define MTV 8        // Multi Terrain Vehicle
 #define DIY_ESP32 9  // DIY without PCB
 
-
 //------------------------------------------------------//
 // SETUP - Choose your body
 //------------------------------------------------------//
@@ -836,66 +835,105 @@ void setup() {
 #if (MCU == ESP32 && OPENBOT != MTV)
   // PWMs
   // Configure PWM functionalitites
-  ledcSetup(CH_PWM_L1, FREQ, RES);
-  ledcSetup(CH_PWM_L2, FREQ, RES);
-  ledcSetup(CH_PWM_R1, FREQ, RES);
-  ledcSetup(CH_PWM_R2, FREQ, RES);
+  #ifdef ESP_ARDUINO_VERSION_MAJOR
+    #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+      ledcAttach(PIN_PWM_LF1, FREQ, RES);
+      ledcAttach(PIN_PWM_LB1, FREQ, RES);
+      ledcAttach(PIN_PWM_LF2, FREQ, RES);
+      ledcAttach(PIN_PWM_LB2, FREQ, RES);
+      ledcAttach(PIN_PWM_RF1, FREQ, RES);
+      ledcAttach(PIN_PWM_RB1, FREQ, RES);
+      ledcAttach(PIN_PWM_RF2, FREQ, RES);
+      ledcAttach(PIN_PWM_RB2, FREQ, RES);
+    #else
+      ledcSetup(CH_PWM_L1, FREQ, RES);
+      ledcSetup(CH_PWM_L2, FREQ, RES);
+      ledcSetup(CH_PWM_R1, FREQ, RES);
+      ledcSetup(CH_PWM_R2, FREQ, RES);
 
-  // Attach the channel to the GPIO to be controlled
-  ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
-  ledcAttachPin(PIN_PWM_LB1, CH_PWM_L1);
-  ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
-  ledcAttachPin(PIN_PWM_LB2, CH_PWM_L2);
-  ledcAttachPin(PIN_PWM_RF1, CH_PWM_R1);
-  ledcAttachPin(PIN_PWM_RB1, CH_PWM_R1);
-  ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
-  ledcAttachPin(PIN_PWM_RB2, CH_PWM_R2);
+      // Attach the channel to the GPIO to be controlled
+      ledcAttachPin(PIN_PWM_LF1, CH_PWM_L1);
+      ledcAttachPin(PIN_PWM_LB1, CH_PWM_L1);
+      ledcAttachPin(PIN_PWM_LF2, CH_PWM_L2);
+      ledcAttachPin(PIN_PWM_LB2, CH_PWM_L2);
+      ledcAttachPin(PIN_PWM_RF1, CH_PWM_R1);
+      ledcAttachPin(PIN_PWM_RB1, CH_PWM_R1);
+      ledcAttachPin(PIN_PWM_RF2, CH_PWM_R2);
+      ledcAttachPin(PIN_PWM_RB2, CH_PWM_R2);
+    #endif
+  #endif
 
-#if (HAS_LEDS_BACK)
-  ledcSetup(CH_LED_LB, FREQ, RES);
-  ledcSetup(CH_LED_RB, FREQ, RES);
-  ledcAttachPin(PIN_LED_RB, CH_LED_RB);
-  ledcAttachPin(PIN_LED_LB, CH_LED_LB);
-#endif
+      
+  #if (HAS_LEDS_BACK)
+    #ifdef ESP_ARDUINO_VERSION_MAJOR
+      #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+        ledcAttach(PIN_LED_RB, FREQ, RES);
+        ledcAttach(PIN_LED_LB, FREQ, RES);
+      #else
+        ledcSetup(CH_LED_LB, FREQ, RES);
+        ledcSetup(CH_LED_RB, FREQ, RES);
+        ledcAttachPin(PIN_LED_RB, CH_LED_RB);
+        ledcAttachPin(PIN_LED_LB, CH_LED_LB);
+      #endif
+    #endif
+  #endif
 
-#if (HAS_LEDS_FRONT)
-  ledcSetup(CH_LED_LF, FREQ, RES);
-  ledcSetup(CH_LED_RF, FREQ, RES);
-  ledcAttachPin(PIN_LED_LF, CH_LED_LF);
-  ledcAttachPin(PIN_LED_RF, CH_LED_RF);
-#endif
-
+  #if (HAS_LEDS_FRONT)
+    #ifdef ESP_ARDUINO_VERSION_MAJOR
+      #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+        ledcAttach(PIN_LED_LF, FREQ, RES);
+        ledcAttach(PIN_LED_RF, FREQ, RES);
+      #else
+        ledcSetup(CH_LED_LF, FREQ, RES);
+        ledcSetup(CH_LED_RF, FREQ, RES);
+        ledcAttachPin(PIN_LED_LF, CH_LED_LF);
+        ledcAttachPin(PIN_LED_RF, CH_LED_RF);
+      #endif  
+    #endif
+  #endif
 #endif
 
 #if (OPENBOT == MTV)
   // PWMs
   // PWM signal configuration using the ESP32 API
-  ledcSetup(LHS_PWM_OUT, FREQ, RES);
-  ledcSetup(RHS_PWM_OUT, FREQ, RES);
+  #ifdef ESP_ARDUINO_VERSION_MAJOR
+    #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+      ledcAttach(PIN_PWM_L, FREQ, RES);
+      ledcAttach(PIN_PWM_R, FREQ, RES);
 
-  // Attach the channel to the GPIO to be controlled
-  ledcAttachPin(PIN_PWM_L, LHS_PWM_OUT);
-  ledcAttachPin(PIN_PWM_R, RHS_PWM_OUT);
+      pinMode(PIN_DIR_L, OUTPUT);
+      pinMode(PIN_DIR_R, OUTPUT);
+      pinMode(PIN_DIR_L, LOW);
+      pinMode(PIN_DIR_R, LOW);
+    #else
+      ledcSetup(LHS_PWM_OUT, FREQ, RES);
+      ledcSetup(RHS_PWM_OUT, FREQ, RES);
+      // Attach the channel to the GPIO to be controlled
+      ledcAttachPin(PIN_PWM_L, LHS_PWM_OUT);
+      ledcAttachPin(PIN_PWM_R, RHS_PWM_OUT);
+    #endif
+  #endif
 
-  pinMode(PIN_DIR_L, OUTPUT);
-  pinMode(PIN_DIR_R, OUTPUT);
-  pinMode(PIN_DIR_L, LOW);
-  pinMode(PIN_DIR_R, LOW);
-#endif
-
-#if (OPENBOT == DIY_ESP32)
-  // PWMs
-  // Configure PWM functionalitites
-  ledcSetup(CH_PWM_L1, FREQ, RES);
-  ledcSetup(CH_PWM_L2, FREQ, RES);
-  ledcSetup(CH_PWM_R1, FREQ, RES);
-  ledcSetup(CH_PWM_R2, FREQ, RES);
-
-  // Attach the channel to the GPIO to be controlled
-  ledcAttachPin(PIN_PWM_L1, CH_PWM_L1);
-  ledcAttachPin(PIN_PWM_L2, CH_PWM_L2);
-  ledcAttachPin(PIN_PWM_R1, CH_PWM_R1);
-  ledcAttachPin(PIN_PWM_R2, CH_PWM_R2);
+  #ifdef ESP_ARDUINO_VERSION_MAJOR
+    #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+      // PWMs
+      // Configure PWM functionalitites
+      ledcAttach(PIN_PWM_L1, FREQ, RES);
+      ledcAttach(PIN_PWM_L2, FREQ, RES);
+      ledcAttach(PIN_PWM_R1, FREQ, RES);
+      ledcAttach(PIN_PWM_R2, FREQ, RES);
+    #else
+      ledcSetup(CH_PWM_L1, FREQ, RES);
+      ledcSetup(CH_PWM_L2, FREQ, RES);
+      ledcSetup(CH_PWM_R1, FREQ, RES);
+      ledcSetup(CH_PWM_R2, FREQ, RES);
+      // Attach the channel to the GPIO to be controlled
+      ledcAttachPin(PIN_PWM_L1, CH_PWM_L1);
+      ledcAttachPin(PIN_PWM_L2, CH_PWM_L2);
+      ledcAttachPin(PIN_PWM_R1, CH_PWM_R1);
+      ledcAttachPin(PIN_PWM_R2, CH_PWM_R2);
+    #endif
+  #endif
 #endif
 
   Serial.begin(115200, SERIAL_8N1);
