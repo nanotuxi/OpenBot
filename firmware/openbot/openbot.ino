@@ -914,13 +914,14 @@ void setup() {
       ledcAttachPin(PIN_PWM_L, LHS_PWM_OUT);
       ledcAttachPin(PIN_PWM_R, RHS_PWM_OUT);
     #endif
-    //set pin mode
       pinMode(PIN_DIR_L, OUTPUT);
       pinMode(PIN_DIR_R, OUTPUT);
       pinMode(PIN_DIR_L, LOW);
       pinMode(PIN_DIR_R, LOW);
   #endif
+#endif
 
+#if (OPENBOT == DIY_ESP32)
   #ifdef ESP_ARDUINO_VERSION_MAJOR
     #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
       // PWMs
